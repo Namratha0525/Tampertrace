@@ -14,10 +14,7 @@ services:
         generateValue: true
       - key: STORAGE_PATH
         value: /var/data/storage
-    disk:
-      name: storage-volume
-      mountPath: /var/data/storage
-      sizeGB: 1
+
 
 databases:
   - name: tampertrace-db
