@@ -30,7 +30,7 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
     db.refresh(db_user)
     
     token = create_access_token(data={"sub": db_user.username})
-    return {"user_id": db_user.id, "username": db_user.username, "token": token}
+    return {"token": token, "user": {"id": db_user.id, "username": db_user.username}}
 
 @router.post("/login")
 def login(user: UserLogin, db: Session = Depends(get_db)):
