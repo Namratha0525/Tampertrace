@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useDropzone } from 'react-dropzone';
 import { Card } from '../components/common/Card';
 import { Button } from '../components/common/Button';
@@ -14,6 +15,7 @@ export const SignDocument: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<SignResponse | null>(null);
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchKeys = async () => {
@@ -182,7 +184,7 @@ export const SignDocument: React.FC = () => {
             ) : (
               <div className="p-4 bg-[#f59e0b]/10 border border-[#f59e0b]/30 rounded-lg text-[#f59e0b] text-sm flex items-center justify-between">
                 <span>No keys available. Generate a key first.</span>
-                <Button size="sm" variant="outline" onClick={() => window.location.href='/keys'}>Go to Keys</Button>
+                <Button size="sm" variant="outline" onClick={() => navigate('/keys')}>Go to Keys</Button>
               </div>
             )}
           </div>
