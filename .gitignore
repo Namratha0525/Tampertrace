@@ -14,7 +14,7 @@ storage/
 backend/storage/
 *.db
 *.pem
-*.json
+
 
 # Env
 .env
