@@ -16,7 +16,7 @@ export const VerificationReport: React.FC = () => {
     const fetchReport = async () => {
       try {
         if (!id) return;
-        const { data } = await verificationService.getReport(id);
+        const { data } = await verificationService.getDetails(id);
         setReport(data);
       } catch (err) {
         console.error(err);
@@ -26,6 +26,22 @@ export const VerificationReport: React.FC = () => {
     };
     fetchReport();
   }, [id]);
+
+  const handleDownloadPdf = async () => {
+    if (!id) return;
+    try {
+      const response = await verificationService.getReport(id);
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `verification_report_${id}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (err) {
+      console.error('Failed to download PDF', err);
+    }
+  };
 
   if (loading) return <div className="text-center text-[#94a3b8] mt-20">Loading Report...</div>;
   if (!report) return <div className="text-center text-[#ff3366] mt-20">Report not found</div>;
@@ -38,10 +54,10 @@ export const VerificationReport: React.FC = () => {
         </button>
         <div className="flex gap-3">
           <Button variant="outline" onClick={() => window.print()}>
-            <Printer className="w-4 h-4 mr-2" /> Print PDF
+            <Printer className="w-4 h-4 mr-2" /> Print HTML
           </Button>
-          <Button>
-            <Download className="w-4 h-4 mr-2" /> Export JSON
+          <Button onClick={handleDownloadPdf}>
+            <Download className="w-4 h-4 mr-2" /> Download PDF
           </Button>
         </div>
       </div>
