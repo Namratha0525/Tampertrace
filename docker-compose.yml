@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  tampertrace:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - tampertrace-storage:/app/storage
+    environment:
+      - DATABASE_URL=sqlite:///./storage/tampertrace.db
+      - SECRET_KEY=your_super_secret_production_key_here
+    restart: unless-stopped
+
+volumes:
+  tampertrace-storage:

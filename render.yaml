@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: tampertrace-app
+    env: docker
+    plan: free
+    region: ohio
+    healthCheckPath: /api
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: tampertrace-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: STORAGE_PATH
+        value: /var/data/storage
+    disk:
+      name: storage-volume
+      mountPath: /var/data/storage
+      sizeGB: 1
+
+databases:
+  - name: tampertrace-db
+    plan: free
+    region: ohio

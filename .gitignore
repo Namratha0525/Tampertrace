@@ -1,0 +1,23 @@
+# Node
+node_modules/
+dist/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+env/
+
+# Database and Keys (Do not commit sensitive data)
+storage/
+backend/storage/
+*.db
+*.pem
+*.json
+
+# Env
+.env
+
+# OS
+.DS_Store
