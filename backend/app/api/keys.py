@@ -42,7 +42,7 @@ def generate_keys(req: KeyCreate, current_user: User = Depends(get_current_user)
     db.commit()
     
     return {
-        "key_id": db_key.id,
+        "id": db_key.id,
         "name": db_key.name,
         "public_key": db_key.public_key_pem,
         "algorithm": db_key.algorithm,
@@ -53,7 +53,7 @@ def generate_keys(req: KeyCreate, current_user: User = Depends(get_current_user)
 @router.get("")
 def list_keys(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     keys = db.query(KeyPair).filter(KeyPair.user_id == current_user.id).all()
-    return [{"key_id": k.id, "name": k.name, "created_at": k.created_at} for k in keys]
+    return [{"id": k.id, "name": k.name, "algorithm": k.algorithm, "key_size": k.key_size, "created_at": k.created_at} for k in keys]
 
 @router.get("/{key_id}")
 def get_key(key_id: str, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
@@ -61,7 +61,7 @@ def get_key(key_id: str, current_user: User = Depends(get_current_user), db: Ses
     if not key:
         raise HTTPException(status_code=404, detail="Key not found")
     return {
-        "key_id": key.id,
+        "id": key.id,
         "name": key.name,
         "public_key": key.public_key_pem,
         "algorithm": key.algorithm,
