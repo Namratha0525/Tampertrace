@@ -66,6 +66,7 @@ def verify_document(db: Session, user_id: int, file_bytes: bytes, filename: str,
         {
             "block_id": r.block_id,
             "page_number": r.page_number,
+            "block_number": r.block_number,
             "status": r.status,
             "original_hash": r.original_hash,
             "current_hash": r.current_hash

@@ -24,23 +24,26 @@ def get_stats(current_user: User = Depends(get_current_user), db: Session = Depe
     recent_docs = db.query(Document).filter(Document.user_id == current_user.id).order_by(Document.created_at.desc()).limit(5).all()
     for d in recent_docs:
         recent_activity.append({
+            "id": d.id,
             "type": "sign",
             "name": d.name,
-            "date": d.created_at.isoformat()
+            "status": "signed",
+            "timestamp": d.created_at.isoformat()
         })
         
     # Get recent verifications
     recent_vers = sorted(verifications, key=lambda v: v.created_at, reverse=True)[:5]
     for v in recent_vers:
         recent_activity.append({
+            "id": v.id,
             "type": "verify",
             "name": v.original_document_name or "Unknown Document",
             "status": v.status,
-            "date": v.created_at.isoformat()
+            "timestamp": v.created_at.isoformat()
         })
         
     # Sort combined activity
-    recent_activity.sort(key=lambda x: x["date"], reverse=True)
+    recent_activity.sort(key=lambda x: x["timestamp"], reverse=True)
     
     return {
         "documents_signed": docs_signed,

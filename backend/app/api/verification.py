@@ -42,7 +42,8 @@ def list_verifications(current_user: User = Depends(get_current_user), db: Sessi
         "id": l.id,
         "status": l.status,
         "document_name": l.original_document_name,
-        "verified_at": l.verified_at
+        "verified_at": l.verified_at,
+        "tampering_detected": l.tampering_detected
     } for l in logs]
 
 @router.get("/verifications/{ver_id}")

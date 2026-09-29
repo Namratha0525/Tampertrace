@@ -27,7 +27,7 @@ async def sign_doc(
 @router.get("")
 def list_documents(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     docs = db.query(Document).filter(Document.user_id == current_user.id).all()
-    return [{"id": d.id, "name": d.name, "filename": d.filename, "created_at": d.created_at} for d in docs]
+    return [{"id": d.id, "name": d.name, "filename": d.filename, "version": d.version, "root_hash": d.root_hash, "created_at": d.created_at} for d in docs]
 
 @router.get("/{doc_id}")
 def get_document(doc_id: str, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
@@ -39,6 +39,7 @@ def get_document(doc_id: str, current_user: User = Depends(get_current_user), db
         "id": doc.id,
         "name": doc.name,
         "filename": doc.filename,
+        "version": doc.version,
         "root_hash": doc.root_hash,
         "blocks": json.loads(doc.block_data),
         "manifest": json.loads(doc.manifest),
