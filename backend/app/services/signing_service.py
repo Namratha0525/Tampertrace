@@ -32,8 +32,12 @@ def sign_document(db: Session, user_id: int, file_bytes: bytes, filename: str, d
         f.write(file_bytes)
         
     # 3 & 4. Parse PDF, extract pages, extract blocks
-    parser = PDFParser(file_bytes)
-    pages = parser.extract_pages()
+    try:
+        parser = PDFParser(file_bytes)
+        pages = parser.extract_pages()
+    except Exception as e:
+        raise HTTPException(status_code=400, detail="Invalid or corrupt PDF document. Please upload a valid PDF file.")
+        
     blocks = extract_blocks(pages)
     
     # 5. Get block hashes
@@ -96,10 +100,18 @@ def sign_document(db: Session, user_id: int, file_bytes: bytes, filename: str, d
         zf.writestr('manifest.json', json.dumps(manifest, indent=2))
         
     return {
-        "id": new_doc.id,
+        "document_id": new_doc.id,
         "name": new_doc.name,
-        "filename": new_doc.filename,
         "root_hash": new_doc.root_hash,
-        "created_at": new_doc.created_at.isoformat(),
-        "package_url": f"/api/documents/{new_doc.id}/package"
+        "signature": base64.b64encode(signature).decode('utf-8'),
+        "status": "success",
+        "blocks": [
+            {
+                "block_id": b.block_id,
+                "page_number": b.page_number,
+                "block_number": b.block_number,
+                "content": b.content,
+                "content_hash": b.content_hash
+            } for b in blocks
+        ]
     }

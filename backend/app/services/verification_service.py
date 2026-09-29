@@ -15,8 +15,11 @@ from app.crypto.rsa_service import load_public_key, verify_signature
 
 def verify_document(db: Session, user_id: int, file_bytes: bytes, filename: str, signature_json: dict, public_key_pem: str, manifest_json: dict) -> dict:
     # 1. Parse uploaded document
-    parser = PDFParser(file_bytes)
-    pages = parser.extract_pages()
+    try:
+        parser = PDFParser(file_bytes)
+        pages = parser.extract_pages()
+    except Exception as e:
+        raise HTTPException(status_code=400, detail="Invalid or corrupt PDF document in verification package.")
     
     # 2 & 3. Extract blocks and calculate current hashes
     current_blocks = extract_blocks(pages)
